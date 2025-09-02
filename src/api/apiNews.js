@@ -18,5 +18,3 @@ export const getNews = async (page_number = 1, page_size = 10) => {
         console.log(e)
     }
 }
-
-console.log([...Array(10)])
