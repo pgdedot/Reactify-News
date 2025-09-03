@@ -2,13 +2,13 @@ import Skeleton from "../../components/Skeleton/Skeleton";
 
 function withSkeleton (Component, type, count) {
     return function WithSkeleton(props) {
-        const {isLoading, ...restPops} = props;
+        const {isLoading, ...restProps} = props;
 
-        if(isLoading || restPops.item === null || (Array.isArray(restPops.news) && restPops.news.length === 0)) {
+        if(isLoading || restProps.item === null || (Array.isArray(restProps.news) && restProps.news.length === 0)) {
             return <Skeleton type={type} count={count}/>
         }
 
-        return <Component {...restPops}/>
+        return <Component {...restProps}/>
     }
 }
 
