@@ -5,9 +5,6 @@ import Pagination from '../Pagination/Pagination'
 import styles from './styles.module.css'
 
 const NewsByFilters = ({filters, changeFilter, isLoading, news}) => {
-    // const {data: dataCategories} = useFetch(getCategories)
-
-
  
     const handleNextPage = () => {
         if(filters.page_number < TOTAL_PAGES){
@@ -29,16 +26,6 @@ const NewsByFilters = ({filters, changeFilter, isLoading, news}) => {
     return (
         <section className={styles.section}>
             <NewsFilters filters={filters} changeFilter={changeFilter}/>
-
-            {/* {dataCategories ? (
-            <Categories 
-                categories={dataCategories.categories} 
-                setSelectedCategories={(category) => changeFilter('category', category)} 
-                selectedCategories={filters.category}
-            />) : null}
-
-            <Search keywords={filters.keywords} setKeywords={(keywords) => changeFilter('keywords', keywords)}/> */}
-
 
             <Pagination 
                 totalPages={TOTAL_PAGES} 
