@@ -1,8 +1,13 @@
 import { formatTimeAgo } from '../../helpers/formatTimeAgo'
+import type { INews } from '../../interfaces'
 import Image from '../Image/Image'
 import styles from './styles.module.css'
 
-const NewsBanner = ({item}) => {
+interface Props {
+    item: INews
+}
+
+const NewsBanner = ({item}: Props) => {
     if (!item) return null; 
 
     const noneImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGL-nM5H8eZfM19UQbIgDn0XwOUj1ByAyV4Q&s'
