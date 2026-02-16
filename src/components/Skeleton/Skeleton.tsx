@@ -1,3 +1,4 @@
+import { useTheme } from "../../context/ThemeContext";
 import type { DirectionType, SkeletonType } from "../../interfaces";
 import styles from "./styles.module.css";
 
@@ -8,26 +9,24 @@ interface Props {
 }
 
 const Skeleton = ({ count = 1, type = "banner", direction = "column" }: Props) => {
+	const { isDark } = useTheme();
+
+	const itemClass = `${type === "banner" ? styles.banner : styles.item} ${
+		isDark ? (type === "banner" ? styles.banner_dark : styles.item_dark) : ""
+	}`;
+
 	return (
 		<>
 			{count > 1 ? (
-				<ul
-					className={
-						direction === "column" ? styles.columnList : styles.rowList
-					}
-				>
+				<ul className={direction === "column" ? styles.columnList : styles.rowList}>
 					{[...Array(count)].map((_, index) => (
-						<li
-							key={index}
-							className={type === "banner" ? styles.banner : styles.item}
-						></li>
+						<li key={index} className={itemClass}></li>
 					))}
 				</ul>
 			) : (
-				<li className={type === "banner" ? styles.banner : styles.item}></li>
+				<li className={itemClass}></li>
 			)}
 		</>
 	);
 };
-
 export default Skeleton;

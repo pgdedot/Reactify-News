@@ -30,6 +30,13 @@
     animation: pulse 1.2s ease-in-out infinite;
 }
 
+.banner_dark, 
+.item_dark {
+    background: linear-gradient(-90deg, #1a1d24 0%, #2a2e36 50%, #1a1d24 100%);
+    background-size: 400% 400%;
+    animation: pulse 1.2s ease-in-out infinite;
+}
+
 @keyframes pulse {
     0% {
         background-position: 0% 0%;
