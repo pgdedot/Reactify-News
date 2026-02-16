@@ -1,36 +1,41 @@
-import { getCategories } from '../../api/apiNews'
-import { useFetch } from '../../helpers/hooks/useFetch'
-import { type CategoriesApiResponse, type IFilters } from '../../interfaces'
-import Categories from '../Categories/Categories'
-import Search from '../Search/Search'
-import Slider from '../Slider/Slider'
-import styles from './styles.module.css'
+import { type IFilters } from "../../interfaces";
+import { useAppDispatch } from "../../store";
+import { useGetCategoriesQuery } from "../../store/services/newsApi";
+import { setFilters } from "../../store/slices/newsSlice";
+import Categories from "../Categories/Categories";
+import Search from "../Search/Search";
+import Slider from "../Slider/Slider";
+import styles from "./styles.module.css";
 
 interface Props {
-    filters?: IFilters,
-    changeFilter: (key: string, value: string | number | null) => void
+	filters?: IFilters;
 }
 
-const NewsFilters = ({filters, changeFilter}: Props) => {
-    const {data: dataCategories} = useFetch<CategoriesApiResponse, null>(getCategories)
+const NewsFilters = ({ filters }: Props) => {
+	const { data: dataCategories } = useGetCategoriesQuery(null);
 
-    return (
-        <div className={styles.filters}>
-            <Slider>
-                {dataCategories ? (
-                <Categories 
-                    categories={dataCategories.categories} 
-                    setSelectedCategories={(category) => changeFilter('category', category)} 
-                    selectedCategories={filters?.category}
-                />) : null}               
-            </Slider>
+	const dispatch = useAppDispatch();
 
-            <Search 
-                keywords={filters?.keywords} 
-                setKeywords={(keywords) => changeFilter('keywords', keywords)}
-            />
-        </div>
-    )
-}
+	return (
+		<div className={styles.filters}>
+			<Slider>
+				{dataCategories ? (
+					<Categories
+						categories={dataCategories.categories}
+						setSelectedCategories={(category) =>
+							dispatch(setFilters({key: "category", value: category}))
+						}
+						selectedCategories={filters?.category}
+					/>
+				) : null}
+			</Slider>
 
-export default NewsFilters
+			<Search
+				keywords={filters?.keywords}
+				setKeywords={(keywords) => dispatch(setFilters({key: "keywords", value: keywords}))}
+			/>
+		</div>
+	);
+};
+
+export default NewsFilters;

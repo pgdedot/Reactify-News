@@ -1,12 +1,15 @@
-import React, { useRef, type ReactElement } from "react";
+import React, { useRef, type ReactElement, type ReactNode } from "react";
 import styles from "./styles.module.css";
+import { useTheme } from "../../context/ThemeContext";
 
 interface Props {
-	children: ReactElement;
+	children: ReactElement | ReactNode;
 	step?: number;
 }
 
-const Slider = ({ children, step = 150 }: Props) => {
+const Slider = ({ children, step = 150}: Props) => {
+	const {isDark} = useTheme();
+	
 	const sliderRef = useRef<HTMLElement | null>(null);
 
 	const scrollLeft = () => {
@@ -15,12 +18,12 @@ const Slider = ({ children, step = 150 }: Props) => {
 	};
 
 	const scrollRight = () => {
-        if (!sliderRef.current) return;
+		if (!sliderRef.current) return;
 		sliderRef.current.scrollLeft += step;
 	};
 
 	return (
-		<div className={styles.slider}>
+		<div className={`${styles.slider} ${isDark ? styles.dark : styles.light}`}>
 			<button onClick={scrollLeft} className={styles.arrow}>
 				&lt;
 			</button>

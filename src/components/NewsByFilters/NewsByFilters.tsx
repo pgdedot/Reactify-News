@@ -1,67 +1,62 @@
-import { getNews } from '../../api/apiNews'
-import { PAGE_SIZE, TOTAL_PAGES } from '../../constants/constants'
-import { useDebounce } from '../../helpers/hooks/useDebounce'
-import { useFetch } from '../../helpers/hooks/useFetch'
-import { useFilters } from '../../helpers/hooks/useFilters'
-import type { NewsApiResponse, ParamsType } from '../../interfaces'
-import NewsFilters from '../NewsFilters/NewsFilters'
-import NewsList from '../NewsList/NewsList'
-import PaginationWrapper from '../PaginationWrapper/PaginationWrapper'
-import styles from './styles.module.css'
+import { TOTAL_PAGES } from "../../constants/constants";
+import { useDebounce } from "../../helpers/hooks/useDebounce";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { useGetNewsQuery } from "../../store/services/newsApi";
+import { setFilters } from "../../store/slices/newsSlice";
+import NewsFilters from "../NewsFilters/NewsFilters";
+import NewsList from "../NewsList/NewsList";
+import PaginationWrapper from "../PaginationWrapper/PaginationWrapper";
+import styles from "./styles.module.css";
 
 const NewsByFilters = () => {
-    const {filters, changeFilter} = useFilters({
-        page_number: 1,
-        page_size: PAGE_SIZE,
-        category: null,
-        keywords: ''
-    })
+	const { filters } = useAppSelector((state) => state.news);
+	const {news} = useAppSelector((state) => state.news)
+	const dispatch = useAppDispatch();
 
-    const debouncedKeyWords = useDebounce(filters.keywords, 1500);
+	const debouncedKeyWords = useDebounce(filters.keywords, 1500);
 
-    const {data, isLoading} = useFetch<NewsApiResponse, ParamsType>(getNews, {
-        ...filters,
-        keywords: debouncedKeyWords
-    }) 
+	const { isLoading } = useGetNewsQuery({
+		...filters,
+		keywords: debouncedKeyWords,
+	});
 
-    const handleNextPage = () => {
-        if(filters.page_number < TOTAL_PAGES){
-            changeFilter('page_number', filters.page_number + 1);
-        }
-     }
+	const handleNextPage = () => {
+		if (filters.page_number < TOTAL_PAGES) {
+			dispatch(
+				setFilters({ key: "page_number", value: filters.page_number + 1 }),
+			);
+		}
+	};
 
-    const handlePrevPage = () => {
-        if(filters.page_number > 1){
-            changeFilter('page_number', filters.page_number - 1);
-        }
-     }
+	const handlePrevPage = () => {
+		if (filters.page_number > 1) {
+			dispatch(
+				setFilters({ key: "page_number", value: filters.page_number - 1 }),
+			);
+		}
+	};
 
-    const handlePageClick = (pageNum: number) => {
-        changeFilter('page_number', pageNum);
-     }    
+	const handlePageClick = (pageNum: number) => {
+		dispatch(setFilters({ key: "page_number", value: pageNum }));
+	};
 
+	return (
+		<section className={styles.section}>
+			<NewsFilters filters={filters} />
 
-    return (
-        <section className={styles.section}>
-            <NewsFilters filters={filters} changeFilter={changeFilter}/>
+			<PaginationWrapper
+				top={true}
+				bottom={true}
+				totalPages={TOTAL_PAGES}
+				handleNextPage={handleNextPage}
+				handlePrevPage={handlePrevPage}
+				handlePageClick={handlePageClick}
+				currentPage={filters.page_number}
+			>
+				<NewsList isLoading={isLoading} news={news} />
+			</PaginationWrapper>
+		</section>
+	);
+};
 
-
-            <PaginationWrapper
-                top={true}
-                bottom={true}
-                totalPages={TOTAL_PAGES} 
-                handleNextPage={handleNextPage} 
-                handlePrevPage={handlePrevPage} 
-                handlePageClick={handlePageClick}
-                currentPage={filters.page_number}            
-            >
-                <NewsList
-                    isLoading={isLoading} 
-                    news={data?.news}
-                />                
-            </PaginationWrapper>
-        </section>
-    )
-}
-
-export default NewsByFilters
+export default NewsByFilters;
