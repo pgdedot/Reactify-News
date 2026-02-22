@@ -1,0 +1,8 @@
+.switcher{
+    cursor: pointer;
+    transition: all .15s;
+}
+
+.switcher:hover{
+    transform: translate(0, -2px);
+}
