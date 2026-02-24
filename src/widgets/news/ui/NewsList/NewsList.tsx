@@ -1,23 +1,26 @@
-import { type INews, NewsItem } from "@/entities/news";
+import { NewsCard, type INews } from "@/entities/news";
 import withSkeleton from "@/shared/HOC/withSkeleton";
 import styles from "./styles.module.css";
+import type { DirectionType, SkeletonType } from "@/shared/interfaces";
 
 interface Props {
 	news?: INews[];
+	type?: SkeletonType;
+	direction?: DirectionType;
 }
 
-const NewsList = ({ news }: Props) => {
+const NewsList = ({ news, type = "item" }: Props) => {
 	if (!news) return null;
 
 	return (
-		<ul className={styles.list}>
+		<ul className={`${type === 'item' ? styles.items : styles.banners}`}>
 			{news?.map((item) => {
-				return <NewsItem key={item.id} item={item} />;
+				return <NewsCard key={item.id} item={item} type={type} />;
 			})}
 		</ul>
 	);
 };
 
-const NewsListWithSkeleton = withSkeleton<Props>(NewsList, "item", 10);
+const NewsListWithSkeleton = withSkeleton<Props>(NewsList, 10);
 
 export default NewsListWithSkeleton;
