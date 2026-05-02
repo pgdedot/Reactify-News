@@ -21,6 +21,6 @@ export const categoriesApi = createApi({
 			},
 		}),
 	}),
-});
+}); // Testing fix and Full Req
 
 export const { useGetCategoriesQuery } = categoriesApi;
